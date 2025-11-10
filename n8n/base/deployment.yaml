@@ -84,8 +84,12 @@ spec:
               value: "false"
           volumeMounts:
             - name: n8n-data
-              mountPath: /home/ubuntu/.n8n
+              mountPath: /home/ubuntu/n8n
       volumes:
         - name: n8n-data
           persistentVolumeClaim:
-            claimName: n8n-data
+            claimName: n8n-data-local
+      # volumes:
+      #   - name: n8n-data
+      #     persistentVolumeClaim:
+      #       claimName: n8n-data
