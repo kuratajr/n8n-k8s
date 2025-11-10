@@ -1,0 +1,62 @@
+# databases/n8n/base/database.yaml
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: n8n-db
+spec:
+  # 3 pod (1 primary + 2 replicas)
+  instances: 3
+
+  # PostgreSQL image (bạn có thể dùng ghcr.io/cloudnative-pg/postgresql:16)
+  imageName: quay.io/enterprisedb/postgresql:16.1
+
+  # Storage (mỗi pod có volume riêng, provisioned bởi Longhorn)
+  storage:
+    size: 10Gi
+    storageClass: longhorn
+
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: "512MB"
+
+  bootstrap:
+    initdb:
+      database: n8n
+      owner: n8n_user
+      secret:
+        name: n8n-db-secret
+
+  monitoring:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "1Gi"
+    limits:
+      cpu: "2"
+      memory: "4Gi"
+
+  # 🔹 Ràng buộc node
+  nodeSelector:
+    longhorn.io/node: "true"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: longhorn.io/node
+                operator: In
+                values:
+                  - "true"
+                  
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: postgresql
+            operator: In
+            values:
+              - n8n-db
+        topologyKey: "kubernetes.io/hostname"
