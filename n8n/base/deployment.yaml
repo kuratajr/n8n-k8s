@@ -1,27 +1,29 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: n8n
 spec:
   replicas: 3
-
-  nodeSelector:
-    longhorn.io/node: "true"
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: longhorn.io/node
-                operator: In
-                values:
-                  - "true"
+  selector:
+    matchLabels:
+      app: n8n # This must match the labels in the template.
   template:
     metadata:
       labels:
         app: n8n
     spec:
+      # Node and Affinity settings moved to spec.template.spec
+      nodeSelector:
+        longhorn.io/node: "true"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: longhorn.io/node
+                    operator: In
+                    values:
+                      - "true"
       containers:
         - name: n8n
           image: docker.n8n.io/n8nio/n8n:latest
@@ -82,9 +84,8 @@ spec:
               value: "false"
           volumeMounts:
             - name: n8n-data
-              mountPath: /home/node/.n8n
+              mountPath: /home/ubuntu/.n8n
       volumes:
         - name: n8n-data
           persistentVolumeClaim:
             claimName: n8n-data
-
