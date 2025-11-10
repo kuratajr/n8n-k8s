@@ -5,9 +5,18 @@ metadata:
   name: n8n
 spec:
   replicas: 3
-  selector:
-    matchLabels:
-      app: n8n
+
+  nodeSelector:
+    longhorn.io/node: "true"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: longhorn.io/node
+                operator: In
+                values:
+                  - "true"
   template:
     metadata:
       labels:
