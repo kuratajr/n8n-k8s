@@ -61,7 +61,6 @@ spec:
                   key: key
             - name: N8N_PORT
               value: "5678"
-              # Disable Telemetry (Diagnostics + Usage Tracking)
             - name: N8N_DEFAULT_EDITION
               value: "community"
             - name: N8N_RUNNERS_MODE
