@@ -83,13 +83,10 @@ spec:
             - name: N8N_COMMUNITY_NODES_ENABLED
               value: "false"
           volumeMounts:
-            - name: n8n-data-local
-              mountPath: /home/ubuntu/n8n
-      # volumes:
-      #   - name: n8n-data
-      #     persistentVolumeClaim:
-      #       claimName: n8n-data-local
-      # volumes:
-      #   - name: n8n-data
-      #     persistentVolumeClaim:
-      #       claimName: n8n-data
+            - mountPath: "/home/node/.n8n"
+              name: n8n-pv-storage
+
+      volumes:
+        - name: n8n-pv-storage
+          persistentVolumeClaim:
+            claimName: n8n-pvc
