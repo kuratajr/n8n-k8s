@@ -22,7 +22,7 @@ spec:
               value: worker
             - name: QUEUE_TYPE
               value: redis
-            - name: REDIS_SENTINELS # Dùng tên Service Redis Sentinel
+            - name: REDIS_SENTINELS
               value: "n8n-redis.n8n-redis.svc.cluster.local:26379" 
             - name: REDIS_MASTER_NAME
               value: redis-master
@@ -69,6 +69,8 @@ spec:
               value: "5678"
             - name: N8N_DEFAULT_EDITION
               value: "community"
+            - name: N8N_LOG_LEVEL
+              value: debug
           volumeMounts:
             - mountPath: "/home/node/.n8n"
               name: n8n-pv-storage
