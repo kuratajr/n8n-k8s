@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: n8n
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: n8n # This must match the labels in the template.
@@ -12,18 +12,18 @@ spec:
       labels:
         app: n8n
     spec:
-      # Node and Affinity settings moved to spec.template.spec
-      nodeSelector:
-        longhorn.io/node: "true"
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: longhorn.io/node
-                    operator: In
-                    values:
-                      - "true"
+      # # Node and Affinity settings moved to spec.template.spec
+      # nodeSelector:
+      #   longhorn.io/node: "true"
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: longhorn.io/node
+      #               operator: In
+      #               values:
+      #                 - "true"
       containers:
         - name: n8n
           image: docker.n8n.io/n8nio/n8n:latest
